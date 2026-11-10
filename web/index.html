@@ -472,7 +472,7 @@
           ['矢印キー', '視点の向き'],
         ],
       },
-      touch: { fire: '発射', gear: 'ギア', thr: '推力', wsel: '武器切替', view: '視点', rudder: 'ラダー', flap: 'フラップ', radar: 'レーダー', ap: '自動操縦', nudge: 'お試し版 — PC / タブレットだと全機能で快適です' },
+      touch: { fire: '発射', gear: 'ギア', thr: '推力', wsel: '武器切替', brake: 'ブレーキ', view: '視点', rudder: 'ラダー', flap: 'フラップ', radar: 'レーダー', ap: '自動操縦', nudge: 'お試し版 — PC / タブレットだと全機能で快適です' },
       host: {
         toggle: 'ホストを立てる(H)...',
         namePlaceholder: '名前（任意）',
@@ -544,7 +544,7 @@
           ['Arrow keys', 'Look around'],
         ],
       },
-      touch: { fire: 'Fire', gear: 'Gear', thr: 'Thrust', wsel: 'Weapon', view: 'View', rudder: 'Rudder', flap: 'Flaps', radar: 'Radar', ap: 'A/P', nudge: 'Taster — best with all controls on PC / tablet' },
+      touch: { fire: 'Fire', gear: 'Gear', thr: 'Thrust', wsel: 'Weapon', brake: 'Brake', view: 'View', rudder: 'Rudder', flap: 'Flaps', radar: 'Radar', ap: 'A/P', nudge: 'Taster — best with all controls on PC / tablet' },
       host: {
         toggle: 'Host a room (H)...',
         namePlaceholder: 'Name (optional)',
@@ -1921,6 +1921,16 @@
     var wsel = mkBtn(T.wsel, 'position:absolute;right:14px;bottom:122px;width:72px;height:52px');
     wsel.addEventListener('touchstart', function (e) { e.preventDefault(); tap('Digit2'); wake(); }, { passive: false });
 
+    // Brake (hold): wheel brake / spoiler on the engine's default B key (SPOILERBRAKE),
+    // held while pressed like fire.  Sits above weapon-select in the right inner
+    // column -- the right thumb is already there, and braking happens on the landing
+    // roll when it is off the throttle.  bottom:182 keeps clear of the fullscreen
+    // button (bottom>=54 rule) and of the tablet radar/autopilot buttons (top).
+    var brake = mkBtn(T.brake, 'position:absolute;right:14px;bottom:182px;width:72px;height:52px;background:rgba(224,168,60,.3);border-color:rgba(224,168,60,.8)');
+    brake.addEventListener('touchstart', function (e) { e.preventDefault(); key('KeyB', true); wake(); }, { passive: false });
+    brake.addEventListener('touchend', function () { key('KeyB', false); });
+    brake.addEventListener('touchcancel', function () { key('KeyB', false); });
+
     // Calm-moment taps go on the LEFT, ABOVE the stick: the left thumb holds the
     // stick almost the whole time, so only actions done when flight is settled live
     // here -- you briefly lift off the stick to tap them.  View toggles cockpit (F1)
@@ -1932,7 +1942,7 @@
     gear.addEventListener('touchstart', function (e) { e.preventDefault(); tap('KeyG'); wake(); }, { passive: false });
 
     wrap.appendChild(thrLbl); wrap.appendChild(thrUp); wrap.appendChild(thrDn);
-    wrap.appendChild(fire); wrap.appendChild(wsel); wrap.appendChild(view); wrap.appendChild(gear);
+    wrap.appendChild(fire); wrap.appendChild(wsel); wrap.appendChild(brake); wrap.appendChild(view); wrap.appendChild(gear);
 
     // Tablet rail: the bigger screen has room for the fuller control set without
     // covering the (larger) HUD, so add the controls a phone deliberately omits.
